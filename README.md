@@ -75,3 +75,13 @@ Setiap fitur dikerjakan di branch terpisah, kemudian di-merge ke main setelah se
 
 Secara keseluruhan, code sudah menerapkan clean code principles seperti meaningful names, DRY, proper error handling, dan input validation. Untuk secure coding, sudah ada validasi input, output encoding, dan null safety. Namun masih ada beberapa kekurangan terutama di aspek security (belum ada authentication/authorization) dan quality assurance (belum ada unit testing). Untuk improvement selanjutnya, prioritas utama adalah menambahkan Spring Security dan unit testing.
 
+---
+
+## Reflection 2
+Setelah menulis unit test, saya merasa lebih percaya diri terhadap fungsionalitas aplikasi karena setiap fitur utama diuji secara terpisah menggunakan skenario positif dan negatif. Jumlah unit test dalam satu class tidak memiliki batas pasti, namun sebaiknya cukup untuk mencakup seluruh perilaku penting dari class tersebut. Untuk memastikan unit test sudah memadai, code coverage dapat digunakan sebagai indikator sejauh mana kode telah diuji. Namun, meskipun code coverage mencapai 100%, hal tersebut tidak menjamin bahwa aplikasi bebas dari bug, karena masih mungkin terdapat kesalahan logika atau edge case yang tidak teruji.
+
+Setelah menulis CreateProductFunctionalTest dan kemudian diminta membuat functional test lain untuk memverifikasi jumlah item pada product list, terlihat bahwa banyak kode setup yang harus ditulis ulang, seperti konfigurasi Selenium dan inisialisasi base URL. Hal ini membuat kode menjadi kurang bersih dan berpotensi menurunkan kualitas karena adanya duplikasi. Jika dibiarkan, perubahan kecil pada setup dapat menyebabkan banyak test perlu diperbarui. Untuk memperbaiki hal ini, setup yang sama sebaiknya diekstrak ke class dasar atau helper agar functional test lebih ringkas, mudah dibaca, dan lebih mudah dirawat ke depannya.
+
+## Kesimpulan
+
+Unit test dan functional test sangat membantu meningkatkan kepercayaan terhadap kualitas aplikasi. Code coverage berguna sebagai indikator awal, tetapi bukan jaminan bebas bug. Untuk functional test, menjaga kebersihan kode sama pentingnya dengan menjaga kebersihan kode aplikasi, terutama dengan menghindari duplikasi dan meningkatkan maintainability melalui reuse dan struktur yang baik.
