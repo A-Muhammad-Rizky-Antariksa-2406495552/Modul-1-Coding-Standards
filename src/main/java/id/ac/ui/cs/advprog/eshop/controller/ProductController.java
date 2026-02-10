@@ -72,6 +72,15 @@ public class ProductController {
         return REDIRECT_PRODUCT_LIST;
     }
 
+    @PostMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable("id") String id) {
+        Product product = service.findById(id);
+        if (product != null) {
+            service.delete(id);
+        }
+        return REDIRECT_PRODUCT_LIST;
+    }
+
     private String validateProduct(Product product) {
         if (product.getProductName() == null || product.getProductName().trim().isEmpty()) {
             return PRODUCT_NAME_REQUIRED;
