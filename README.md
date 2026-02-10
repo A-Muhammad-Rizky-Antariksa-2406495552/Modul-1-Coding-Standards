@@ -78,36 +78,9 @@ Secara keseluruhan, code sudah menerapkan clean code principles seperti meaningf
 ---
 
 ## Reflection 2
-### 1. Pengalaman Menulis Unit Test dan Code Coverage
+Setelah menulis unit test, saya merasa lebih percaya diri terhadap fungsionalitas aplikasi karena setiap fitur utama diuji secara terpisah menggunakan skenario positif dan negatif. Jumlah unit test dalam satu class tidak memiliki batas pasti, namun sebaiknya cukup untuk mencakup seluruh perilaku penting dari class tersebut. Untuk memastikan unit test sudah memadai, code coverage dapat digunakan sebagai indikator sejauh mana kode telah diuji. Namun, meskipun code coverage mencapai 100%, hal tersebut tidak menjamin bahwa aplikasi bebas dari bug, karena masih mungkin terdapat kesalahan logika atau edge case yang tidak teruji.
 
-Setelah menulis unit test, saya merasa lebih yakin terhadap perilaku kode yang saya buat karena fungsi-fungsi utama sudah diverifikasi secara otomatis. Jumlah unit test dalam satu class tidak memiliki angka pasti, namun idealnya setiap method publik dan setiap kemungkinan skenario penting (normal case dan edge case) memiliki test masing-masing.
-
-Untuk memastikan unit test sudah cukup, salah satu metrik yang dapat digunakan adalah code coverage, yaitu seberapa banyak baris atau cabang kode yang dieksekusi oleh test. Code coverage membantu mengidentifikasi bagian kode yang belum teruji. Namun, 100% code coverage tidak menjamin kode bebas dari bug, karena test bisa saja hanya menguji skenario sederhana tanpa memvalidasi logika secara mendalam atau kasus ekstrem.
-
-### 2. Clean Code pada Functional Test Suite
-
-Jika saya membuat functional test suite baru (misalnya untuk memverifikasi jumlah item pada product list) dengan menyalin struktur dari CreateProductFunctionalTest, maka dari sisi fungsional test tersebut akan berjalan, tetapi dari sisi clean code terdapat beberapa potensi masalah.
-
-### Masalah yang mungkin muncul:
-
-Code Duplication (DRY violation)
-Setup seperti konfigurasi Selenium, base URL, dan inisialisasi driver akan terulang di banyak class test.
-
-Maintainability rendah
-Jika ada perubahan pada setup (misalnya cara mengatur base URL atau browser), semua test suite harus diubah satu per satu.
-
-Tight coupling antar test dan setup
-Setiap class test memiliki logika setup sendiri-sendiri sehingga sulit dikelola dalam skala besar.
-
-Perbaikan yang bisa dilakukan:
-
-Mengekstrak logic setup yang sama ke abstract base class (misalnya BaseFunctionalTest)
-
-Menggunakan utility/helper class untuk operasi yang sering dipakai (misalnya navigasi ke halaman tertentu)
-
-Menjaga setiap test tetap fokus pada satu tujuan agar tetap readable dan mudah dipahami
-
-Dengan pendekatan tersebut, kualitas kode test tetap terjaga meskipun jumlah functional test bertambah.
+Setelah menulis CreateProductFunctionalTest dan kemudian diminta membuat functional test lain untuk memverifikasi jumlah item pada product list, terlihat bahwa banyak kode setup yang harus ditulis ulang, seperti konfigurasi Selenium dan inisialisasi base URL. Hal ini membuat kode menjadi kurang bersih dan berpotensi menurunkan kualitas karena adanya duplikasi. Jika dibiarkan, perubahan kecil pada setup dapat menyebabkan banyak test perlu diperbarui. Untuk memperbaiki hal ini, setup yang sama sebaiknya diekstrak ke class dasar atau helper agar functional test lebih ringkas, mudah dibaca, dan lebih mudah dirawat ke depannya.
 
 ## Kesimpulan
 
