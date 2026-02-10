@@ -75,3 +75,40 @@ Setiap fitur dikerjakan di branch terpisah, kemudian di-merge ke main setelah se
 
 Secara keseluruhan, code sudah menerapkan clean code principles seperti meaningful names, DRY, proper error handling, dan input validation. Untuk secure coding, sudah ada validasi input, output encoding, dan null safety. Namun masih ada beberapa kekurangan terutama di aspek security (belum ada authentication/authorization) dan quality assurance (belum ada unit testing). Untuk improvement selanjutnya, prioritas utama adalah menambahkan Spring Security dan unit testing.
 
+---
+
+## Reflection 2
+### 1. Pengalaman Menulis Unit Test dan Code Coverage
+
+Setelah menulis unit test, saya merasa lebih yakin terhadap perilaku kode yang saya buat karena fungsi-fungsi utama sudah diverifikasi secara otomatis. Jumlah unit test dalam satu class tidak memiliki angka pasti, namun idealnya setiap method publik dan setiap kemungkinan skenario penting (normal case dan edge case) memiliki test masing-masing.
+
+Untuk memastikan unit test sudah cukup, salah satu metrik yang dapat digunakan adalah code coverage, yaitu seberapa banyak baris atau cabang kode yang dieksekusi oleh test. Code coverage membantu mengidentifikasi bagian kode yang belum teruji. Namun, 100% code coverage tidak menjamin kode bebas dari bug, karena test bisa saja hanya menguji skenario sederhana tanpa memvalidasi logika secara mendalam atau kasus ekstrem.
+
+### 2. Clean Code pada Functional Test Suite
+
+Jika saya membuat functional test suite baru (misalnya untuk memverifikasi jumlah item pada product list) dengan menyalin struktur dari CreateProductFunctionalTest, maka dari sisi fungsional test tersebut akan berjalan, tetapi dari sisi clean code terdapat beberapa potensi masalah.
+
+### Masalah yang mungkin muncul:
+
+Code Duplication (DRY violation)
+Setup seperti konfigurasi Selenium, base URL, dan inisialisasi driver akan terulang di banyak class test.
+
+Maintainability rendah
+Jika ada perubahan pada setup (misalnya cara mengatur base URL atau browser), semua test suite harus diubah satu per satu.
+
+Tight coupling antar test dan setup
+Setiap class test memiliki logika setup sendiri-sendiri sehingga sulit dikelola dalam skala besar.
+
+Perbaikan yang bisa dilakukan:
+
+Mengekstrak logic setup yang sama ke abstract base class (misalnya BaseFunctionalTest)
+
+Menggunakan utility/helper class untuk operasi yang sering dipakai (misalnya navigasi ke halaman tertentu)
+
+Menjaga setiap test tetap fokus pada satu tujuan agar tetap readable dan mudah dipahami
+
+Dengan pendekatan tersebut, kualitas kode test tetap terjaga meskipun jumlah functional test bertambah.
+
+## Kesimpulan
+
+Unit test dan functional test sangat membantu meningkatkan kepercayaan terhadap kualitas aplikasi. Code coverage berguna sebagai indikator awal, tetapi bukan jaminan bebas bug. Untuk functional test, menjaga kebersihan kode sama pentingnya dengan menjaga kebersihan kode aplikasi, terutama dengan menghindari duplikasi dan meningkatkan maintainability melalui reuse dan struktur yang baik.
