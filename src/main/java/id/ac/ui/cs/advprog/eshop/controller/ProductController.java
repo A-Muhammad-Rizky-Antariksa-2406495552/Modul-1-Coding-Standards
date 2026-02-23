@@ -70,6 +70,7 @@ public class ProductController {
     public String editProductPost(@ModelAttribute Product product, Model model) {
         String validationError = validateProduct(product);
         if (validationError != null) {
+            model.addAttribute("product", product);
             model.addAttribute(ERROR_ATTRIBUTE, validationError);
             return EDIT_PRODUCT_VIEW;
         }
