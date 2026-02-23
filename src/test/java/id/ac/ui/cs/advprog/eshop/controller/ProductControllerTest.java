@@ -2,11 +2,14 @@ package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.service.ProductService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,14 +19,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ProductController.class)
+@ExtendWith(MockitoExtension.class)
 class ProductControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @Mock
     private ProductService productService;
+
+    @InjectMocks
+    private ProductController productController;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(productController).build();
+    }
 
     @Test
     void homeReturnsProductListView() throws Exception {
@@ -132,13 +142,6 @@ class ProductControllerTest {
 
     @Test
     void editProductPostWithValidDataRedirects() throws Exception {
-        Product product = new Product();
-        product.setProductId("1");
-        product.setProductName("Sampo Cap Bambang");
-        product.setProductQuantity(100);
-
-        when(productService.findById("1")).thenReturn(product);
-
         mockMvc.perform(post("/product/edit")
                         .param("productId", "1")
                         .param("productName", "Sampo Cap Bambang")
