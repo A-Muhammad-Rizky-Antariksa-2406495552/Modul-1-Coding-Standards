@@ -2,6 +2,8 @@
 ### 2406495552
 ### Progjut A
 
+## Module 01 - Coding Standards
+
 ## Reflection 1
 ## Clean Code Principles yang Diterapkan
 
@@ -85,3 +87,13 @@ Setelah menulis CreateProductFunctionalTest dan kemudian diminta membuat functio
 ## Kesimpulan
 
 Unit test dan functional test sangat membantu meningkatkan kepercayaan terhadap kualitas aplikasi. Code coverage berguna sebagai indikator awal, tetapi bukan jaminan bebas bug. Untuk functional test, menjaga kebersihan kode sama pentingnya dengan menjaga kebersihan kode aplikasi, terutama dengan menghindari duplikasi dan meningkatkan maintainability melalui reuse dan struktur yang baik.
+
+## Module 02 - CI/CD & DevOps
+
+### 1. List the code quality issue(s) that you fixed during the exercise and explain your strategy on fixing them
+Selama exercise, saya memperbaiki dua issue yang terdeteksi oleh SonarCloud. Issue pertama adalah "Define a constant instead of duplicating this literal 'product' 3 times" pada ProductController.java. String literal "product" digunakan berulang kali sebagai key pada model.addAttribute(). Strategi perbaikannya adalah dengan melakukan Extract Constant, yaitu mengeluarkan string literal tersebut menjadi private static final String PRODUCT_ATTRIBUTE = "product" sehingga menghindari duplikasi dan memudahkan maintenance jika nama attribute perlu diubah di kemudian hari.
+
+Issue kedua yang saya fix adalah "Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation" pada method contextLoads() di EshopApplicationTests.java. Method tersebut kosong tanpa penjelasan. Strategi perbaikannya adalah dengan menambahkan assertion assertDoesNotThrow agar method memiliki implementasi yang jelas dan memverifikasi bahwa Spring application context berhasil dimuat tanpa error.
+
+### 2. Look at your CI/CD workflows (GitHub)/pipelines (GitLab). Do you think the current implementation has met the definition of Continuous Integration and Continuous Deployment? Explain the reasons (minimum 3 sentences)!
+Ya, implementasi saat ini sudah memenuhi definisi CI/CD. Untuk aspek Continuous Integration, setiap push atau pull request ke branch main secara otomatis men-trigger workflow ci.yml yang menjalankan test suite dan menghasilkan laporan JaCoCo code coverage, serta workflow SonarCloud yang menganalisis kualitas kode dan mendeteksi bug, code smell, maupun vulnerability. Ini memastikan bahwa setiap perubahan kode selalu diverifikasi secara otomatis sebelum diintegrasikan ke codebase utama. Untuk aspek Continuous Deployment, aplikasi terhubung dengan PaaS yang secara otomatis melakukan deploy ulang setiap kali ada perubahan baru di branch main, sehingga versi terbaru aplikasi selalu tersedia di production tanpa perlu proses manual.
