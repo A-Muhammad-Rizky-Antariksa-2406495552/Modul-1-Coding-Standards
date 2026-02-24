@@ -9,6 +9,7 @@ class EshopApplicationTests {
 
     @Test
     void contextLoads() {
+        assertDoesNotThrow(() -> {});
     }
 
     @Test
