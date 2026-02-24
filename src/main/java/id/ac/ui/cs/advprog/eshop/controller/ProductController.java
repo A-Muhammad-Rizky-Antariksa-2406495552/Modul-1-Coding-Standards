@@ -21,13 +21,14 @@ public class ProductController {
     private static final String PRODUCT_NAME_REQUIRED = "Product name is required";
     private static final String QUANTITY_POSITIVE = "Quantity must be positive";
     private static final String PRODUCT_ATTRIBUTE = "product";
+    private static final String PRODUCTS_ATTRIBUTE = "products";
 
     @Autowired
     private ProductService service;
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("products", service.findAll());
+        model.addAttribute(PRODUCTS_ATTRIBUTE, service.findAll());
         return PRODUCT_LIST_VIEW;
     }
 
@@ -53,7 +54,7 @@ public class ProductController {
     @GetMapping("/list")
     public String productListPage(Model model) {
         List<Product> allProducts = service.findAll();
-        model.addAttribute(PRODUCT_ATTRIBUTE, allProducts);
+        model.addAttribute(PRODUCTS_ATTRIBUTE, allProducts);
         return PRODUCT_LIST_VIEW;
     }
 
