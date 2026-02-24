@@ -48,6 +48,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build and test with JaCoCo
+        run: ./gradlew build jacocoTestReport
+
       - name: Analyze with SonarCloud
 
         # You can pin the exact commit or the version.
