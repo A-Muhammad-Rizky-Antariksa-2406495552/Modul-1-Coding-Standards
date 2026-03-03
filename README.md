@@ -85,3 +85,43 @@ Setelah menulis CreateProductFunctionalTest dan kemudian diminta membuat functio
 ## Kesimpulan
 
 Unit test dan functional test sangat membantu meningkatkan kepercayaan terhadap kualitas aplikasi. Code coverage berguna sebagai indikator awal, tetapi bukan jaminan bebas bug. Untuk functional test, menjaga kebersihan kode sama pentingnya dengan menjaga kebersihan kode aplikasi, terutama dengan menghindari duplikasi dan meningkatkan maintainability melalui reuse dan struktur yang baik.
+
+---
+
+## Reflection 3
+## Prinsip solid yang diterapkan:
+
+### 1. Single Responsibility Principle (SRP)
+Memisahkan CarController dari ProductController. Sebelumnya, CarController adalah inner class di dalam ProductController, yang berarti satu file bertanggung jawab atas dua hal yang tidak berkaitan sama sekali. Ini melanggar SRP karena ProductController punya lebih dari satu alasan untuk berubah, yakni ia harus diubah jika routing Product berubah dan juga harus diubah jika routing Car berubah.
+
+### 2. Open/Closed Principle (OCP)
+Semua controller bergantung pada interface, bukan pada implementasi konkretnya. Artinya, behavior sistem bisa diperluas tanpa mengubah kode yang sudah ada. Misalnya, jika nantinya perlu ditambahkan sesuatu yang baru, ProductController tidak perlu diubah sama sekali, cukup buat implementasi baru dan daftarkan ke Spring.
+
+### 3. Liskov Substitution Principle (LSP)
+Pelanggaran LSP jelas terpampang di CarController extends ProductController. Sebuah Car controller bukan "jenis" dari Product controller, mereka adalah dua entitas yang sejajar dan independen. Dengan menghapus inheritance ini dan menjadikan CarController kelas mandiri, LSP terpenuhi karena tidak ada subclass yang melanggar kontrak superclass-nya.
+
+### 4. Interface Segregation Principle (ISP)
+ProductService dan CarService dipertahankan sebagai dua interface yang terpisah. ProductController hanya tahu tentang ProductService, dan CarController hanya tahu tentang CarService. Tidak ada yang dipaksa bergantung pada method yang tidak dibutuhkan. Selain itu, method deleteProductById yang duplikat dan kosong dihapus dari ProductService sehinnga interface menjadi lebih ringkas dan hanya berisi method yang benar-benar dibutuhkan.
+
+### 5. Dependency Inversion Principle (DIP)
+Sebelumnya, CarController langsung meng-inject CarServiceImpl dan bergantung pada implementasi konkret, bukan abstraksi. Setelah refactor, CarController bergantung pada interface CarService. Begitu pula semua controller lainnya, semuanya bergantung pada interface dan bukan pada kelas Impl-nya langsung. Selain itu, semua dependency diinjeksikan melalui constructor injection, bukan field injection, sehingga dependency lebih eksplisit dan mudah di-test.
+
+## Keuntungan Menerapkan SOLID
+### Mudah di-test secara terpisah
+Karena ProductController bergantung pada interface ProductService, bukan langsung ke ProductServiceImpl, proses unit test jadi lebih mudah. Saat pengujian, ProductService bisa di-mock menggunakan Mockito tanpa perlu menjalankan implementasi aslinya. Hal ini terlihat pada ProductControllerTest, di mana ProductService di-mock sehingga pengujian benar-benar terisolasi dan tidak bergantung pada ProductRepository maupun komponen lain.
+
+### Perubahan di satu bagian tidak merusak bagian lain
+Dengan pemisahan antara CarController dan ProductController, perubahan pada logika Car, misalnya penambahan validasi input saat create car, hanya berdampak pada CarController dan CarServiceImpl. ProductController beserta seluruh test Product tetap berjalan normal tanpa terpengaruh.
+
+### Mudah diperluas tanpa risiko
+Penerapan prinsip Open–Closed (OCP) memungkinkan penambahan implementasi baru dari ProductService tanpa harus mengubah ProductController. Contohnya, jika ingin menambahkan service yang mengambil data dari database sungguhan, cukup membuat class baru yang mengimplementasikan ProductService. Controller tetap menggunakan interface yang sama.
+
+## Kerugian Tidak Menerapkan SOLID
+### Sulit di-test dan rentan error
+Pada kode lama, CarController dibuat sebagai inner class yang mewarisi ProductController dan langsung meng-inject CarServiceImpl, bukan interface. Kondisi ini membuat unit test sulit dilakukan karena service tidak bisa di-mock dengan mudah. Dampaknya terlihat dari ProductControllerTest, di mana seluruh 11 test gagal karena keberadaan CarController sebagai inner class mengganggu konfigurasi MockMvc.
+
+### Perubahan kecil berdampak besar
+Karena CarController berada di dalam ProductController, setiap perubahan pada routing Car, meskipun tidak berkaitan dengan Product, tetap mengharuskan perubahan pada file ProductController.java. Hal ini meningkatkan risiko terjadinya bug pada fitur Product yang sebelumnya sudah berjalan dengan baik.
+
+### Duplikasi yang membingungkan
+Pada ProductService versi lama terdapat dua method dengan tujuan yang sama, yaitu delete(String id) dan deleteProductById(String productId). Method deleteProductById bahkan tidak memiliki implementasi dan tidak melakukan apa pun. Hal ini terjadi karena tidak adanya penerapan prinsip Interface Segregation (ISP), sehingga interface menjadi tidak jelas. Akibatnya, developer lain bisa salah memanggil method dan menyebabkan produk tidak terhapus tanpa adanya error, yang membuat bug sulit dilacak.
