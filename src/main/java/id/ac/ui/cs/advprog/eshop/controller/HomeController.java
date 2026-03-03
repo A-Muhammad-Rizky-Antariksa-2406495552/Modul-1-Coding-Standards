@@ -9,12 +9,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
+    private final ProductService productService;
+
     @Autowired
-    private ProductService service;
+    public HomeController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("products", service.findAll());
+        model.addAttribute("products", productService.findAll());
         return "productList";
     }
 }
