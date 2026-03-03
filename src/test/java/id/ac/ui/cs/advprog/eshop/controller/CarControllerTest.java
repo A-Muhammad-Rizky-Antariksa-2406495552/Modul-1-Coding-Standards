@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,9 +33,13 @@ class CarControllerTest {
 
     @BeforeEach
     void setUp() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/WEB-INF/templates/");
+        viewResolver.setSuffix(".html");
+
         mockMvc = MockMvcBuilders
                 .standaloneSetup(carController)
-                .setViewResolvers((viewName, locale) -> (model, request, response) -> {})
+                .setViewResolvers(viewResolver)
                 .build();
     }
 
